@@ -11,7 +11,7 @@ local currentAction = nil
 
 Citizen.CreateThread(function()
     while ESX == nil do
-        TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+        TriggerEvent("esx:getSharedObject", function(obj) ESX = obj end)
         Citizen.Wait(10)
     end
     TriggerServerEvent("esx_boombox:getZones")
@@ -22,15 +22,15 @@ end)
 
 local function playMusic(boombox)
     menuOpen = true
-    ESX.Ui.Menu.Open('dialog', GetCurrentResourceName(), 'boomboxPlayMusic', {
-        title = 'Odtwórz Muzyke',
-        align = 'center',
+    ESX.Ui.Menu.Open("dialog", GetCurrentResourceName(), "boomboxPlayMusic", {
+        title = _U("play_music"),
+        align = "center",
     }, function(data, menu)
         local value = data.value
         if value then
             local playerPed = PlayerPedId()
             local playerCoords = GetEntityCoords(playerPed)
-            local object = GetClosestObjectOfType(playerCoords, 3.0, GetHashKey('prop_boombox_01'), false, false, false)
+            local object = GetClosestObjectOfType(playerCoords, 3.0, GetHashKey("prop_boombox_01"), false, false, false)
             if DoesEntityExist(object) then
                 local boobmoxCoords = GetEntityCoords(object)
                 local musicData = {
@@ -43,7 +43,7 @@ local function playMusic(boombox)
 
             end
         else
-            ESX.ShowNotification("Musisz wprowadzić URL piosenki!")
+            ESX.ShowNotification(_U("url_missing"))
         end
     end)
 end
@@ -59,15 +59,15 @@ local function stopMusic(songIdentificator)
 end
 
 local function changeVolume(songIdentificator)
-    ESX.Ui.Menu.Open('dialog', GetCurrentResourceName(), 'boomboxChangeVolume', {
-        title = 'Zmień Głośność 1-100',
-        align = 'center',
+    ESX.Ui.Menu.Open("dialog", GetCurrentResourceName(), "boomboxChangeVolume", {
+        title = _U("change_volume") .. " 1-100",
+        align = "center",
     }, function(data, menu)
         local value = data.value
         if tonumber(typeof(data.value)) then
             TriggerServerEvent("esx_boombox:soundStatus", "volume", songIdentificator, value)
         else
-            ESX.ShowNotification("Źle wprowadzono Głośność!")
+            ESX.ShowNotification(_U("invalid_volume"))
         end
     end)
 
@@ -79,24 +79,24 @@ end
 
 local function openBoomboxMenu(boombox)
     menuOpen = true
-    ESX.UI.Menu.Open("default", GetCurrentResourceName(), 'boomboxMenu', {
-        title = 'Menu Boomboxa',
-        align = 'center',
+    ESX.UI.Menu.Open("default", GetCurrentResourceName(), "boomboxMenu", {
+        title = _U("boombox_menu"),
+        align = "center",
         elements = {
-            { label = _U('play_music'), value = 'play_music' },
-            { label = _U('stop_music'), value = 'stop_music' },
-            { label = _U('change_volume'), value = 'change_volume' },
-            { label = _U('pickup_boombox'), value = 'pickup_boombox' },
+            { label = _U("play_music"), value = "play_music" },
+            { label = _U("stop_music"), value = "stop_music" },
+            { label = _U("change_volume"), value = "change_volume" },
+            { label = _U("pickup_boombox"), value = "pickup_boombox" },
         }
     }, function(data, menu)
         local currentVal = data.current.value
-        if currentVal == 'play_music' then
+        if currentVal == "play_music" then
             playMusic(boombox)
-        elseif currentVal == 'stop_music' then
+        elseif currentVal == "stop_music" then
             stopMusic(boombox)
-        elseif currentVal == 'change_volume' then
+        elseif currentVal == "change_volume" then
             changeVolume(boombox)
-        elseif currentVal == 'pickup_boombox' then
+        elseif currentVal == "pickup_boombox" then
             menu.close()
             menuOpen = false
             pickup_Boombox(boombox)
@@ -138,7 +138,7 @@ RegisterNetEvent("esx_boombox:UseItem", function()
     startAnimation("anim@heists@money_grab@briefcase", "put_down_case")
     Citizen.Wait(1000)
     ClearPedTasks(PlayerPedId())
-    ESX.Game.SpawnObject('prop_boombox_01', GetEntityCoords(PlayerPedId()), function(object)
+    ESX.Game.SpawnObject("prop_boombox_01", GetEntityCoords(PlayerPedId()), function(object)
         if DoesEntityExist(object) then
             local boobmoxCoords = GetEntityCoords(object)
             local musicData = {
@@ -179,7 +179,7 @@ AddEventHandler("esx_ambulancejob:revive", function(data)
     isDead = false
 end)
 
-AddEventHandler('esx:onPlayerDeath', function(data)
+AddEventHandler("esx:onPlayerDeath", function(data)
     IsDead = true
 end)
 
@@ -194,7 +194,7 @@ Citizen.CreateThread(function()
         local closestDistance = -1
         local closestEntity = nil
 
-        local object = GetClosestObjectOfType(coords, 3.0, GetHashKey('prop_boombox_01'), false, false, false)
+        local object = GetClosestObjectOfType(coords, 3.0, GetHashKey("prop_boombox_01"), false, false, false)
 
         if DoesEntityExist(object) then
             if musicZones[object] then
@@ -208,7 +208,7 @@ Citizen.CreateThread(function()
 
         if closestDistance ~= -1 and closestDistance <= 3.0 then
             if lastEntity ~= closestEntity and not menuOpen then
-                SetTextComponentFormat('STRING')
+                SetTextComponentFormat("STRING")
                 AddTextComponentString(_U("help_prompt"))
                 DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
@@ -230,3 +230,5 @@ RegisterCommand("+interact", function()
     end
 
 end, false)
+
+RegisterKeyMapping("+interact", _U("interact"), "keyboard", "e")

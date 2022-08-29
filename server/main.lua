@@ -2,11 +2,11 @@ local xSound = exports.xsound
 
 local boomboxZones = {}
 
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+TriggerEvent("esx:getSharedObject", function(obj) ESX = obj end)
 
-ESX.RegisterUsableItem('hifi', function(playerId)
+ESX.RegisterUsableItem("hifi", function(playerId)
     local xPlayer = ESX.GetPlayerFromId(playerId)
-    xPlayer.removeInventoryItem('hifi', 1)
+    xPlayer.removeInventoryItem("hifi", 1)
     TriggerClientEvent("esx_boombox:UseItem", playerId)
 end)
 
@@ -35,6 +35,6 @@ RegisterServerEvent("esx_boombox:destroyBoombox")
 ADdEventHandler("esx_boombox:destroyBoombox", function(songIdentificator)
     local xPlayer = ESX.GetPlayerFromId(playerId)
     boomboxZones[songIdentificator] = nil
-    xPlayer.addInventoryItem('hifi', 1)
+    xPlayer.addInventoryItem("hifi", 1)
     TriggerClientEvent("esx_boombox:soundStatus", -1, "deleteBoombox", songIdentificator)
 end)
