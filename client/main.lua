@@ -3,23 +3,17 @@ local xSound = exports.xsound
 local musicZones = {}
 local isDead = false
 local menuOpen = false;
-
 local lastEntity = nil
 local currentAction = nil
-
-
-
 Citizen.CreateThread(function()
     while ESX == nil do
         TriggerEvent("esx:getSharedObject", function(obj) ESX = obj end)
         Citizen.Wait(10)
     end
     TriggerServerEvent("esx_boombox:getZones")
+    RegisterKeyMapping("+interact", _U("interact"), "keyboard", "e")
 end)
-
-
 -- Functions
-
 local function playMusic(boombox)
     menuOpen = true
     ESX.Ui.Menu.Open("dialog", GetCurrentResourceName(), "boomboxPlayMusic", {
@@ -47,17 +41,14 @@ local function playMusic(boombox)
         end
     end)
 end
-
 local function startAnimation(lib, anim)
     ESX.Streaming.RequestAnimDict(lib, function()
         TaskPlayAnim(PlayerPedId(), lib, anim, 8.0, -8.0, -1, 1, 0, false, false, false)
     end)
 end
-
 local function stopMusic(songIdentificator)
     TriggerServerEvent("esx_boombox:soundStatus", "stop", songIdentificator)
 end
-
 local function changeVolume(songIdentificator)
     ESX.Ui.Menu.Open("dialog", GetCurrentResourceName(), "boomboxChangeVolume", {
         title = _U("change_volume") .. " 1-100",
@@ -72,7 +63,6 @@ local function changeVolume(songIdentificator)
     end)
 
 end
-
 local function pickup_Boombox(songIdentificator)
     TriggerEvent("esx_boombox:pickupBoombox", songIdentificator)
 end
@@ -106,9 +96,7 @@ local function openBoomboxMenu(boombox)
         menu.close()
     end)
 end
-
 -- Events
-
 RegisterNetEvent("esx_boombox:soundStatus")
 AddEventHandler("esx_boombox:soundStatus", function(type, songIdentificator, data)
     if type == "play" then
@@ -133,7 +121,6 @@ AddEventHandler("esx_boombox:soundStatus", function(type, songIdentificator, dat
         end
     end
 end)
-
 RegisterNetEvent("esx_boombox:UseItem", function()
     startAnimation("anim@heists@money_grab@briefcase", "put_down_case")
     Citizen.Wait(1000)
@@ -148,12 +135,9 @@ RegisterNetEvent("esx_boombox:UseItem", function()
             }
             local songIdentificator = musicData.entityId
             TriggerServerEvent("esx_boombox:soundStatus", "placed_boombox", songIdentificator, musicData)
-
         end
-
     end)
 end)
-
 RegisterNetEvent("esx_boombox:pickupBoombox")
 AddEventHandler("esx_boombox:pickupBoombox", function(entityId)
     NetworkRequestControlOfEntity(entityId)
@@ -167,25 +151,17 @@ AddEventHandler("esx_boombox:pickupBoombox", function(entityId)
     Citizen.Wait(500)
     ClearPedTasks(PlayerPedId())
 end)
-
-
 RegisterNetEvent("esx_boombox:getZones")
 AddEventHandler("esx_boombox:getZones", function(data)
     musicZones = data
 end)
-
-
 AddEventHandler("esx_ambulancejob:revive", function(data)
     isDead = false
 end)
-
 AddEventHandler("esx:onPlayerDeath", function(data)
     IsDead = true
 end)
-
 -- Threads
-
-
 Citizen.CreateThread(function()
     local sleep = 500;
     while not isDead do
@@ -193,9 +169,7 @@ Citizen.CreateThread(function()
         local coords = GetEntityCoords(playerPed)
         local closestDistance = -1
         local closestEntity = nil
-
         local object = GetClosestObjectOfType(coords, 3.0, GetHashKey("prop_boombox_01"), false, false, false)
-
         if DoesEntityExist(object) then
             if musicZones[object] then
                 local dist = GetEntityCoords(closestEntity).xy - coords.xy
@@ -205,13 +179,11 @@ Citizen.CreateThread(function()
                 end
             end
         end
-
         if closestDistance ~= -1 and closestDistance <= 3.0 then
             if lastEntity ~= closestEntity and not menuOpen then
                 SetTextComponentFormat("STRING")
                 AddTextComponentString(_U("help_prompt"))
                 DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-
                 lastEntity = closestEntity
                 currentAction = "music"
             end
@@ -230,5 +202,3 @@ RegisterCommand("+interact", function()
     end
 
 end, false)
-
-RegisterKeyMapping("+interact", _U("interact"), "keyboard", "e")

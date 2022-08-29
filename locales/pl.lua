@@ -1,4 +1,5 @@
 Locales["pl"] = {
+    ["interact"] = "Interakcja",
     ["help_prompt"] = "Naciśnij ~INPUT_CONTEXT~ aby użyć ~y~boomboxa~s~",
     ["play_music"] = "Odtwórz muzykę",
     ["stop_music"] = "Zatrzymaj muzykę",
@@ -7,5 +8,4 @@ Locales["pl"] = {
     ["invalid_volume"] = "Nieprawidłowa Głośność",
     ["url_missing"] = "Musisz wprowadzić URL piosenki!",
     ["boombox_menu"] = "Menu Boomboxa",
-    ["interact"] = "Interakcja",
 }
