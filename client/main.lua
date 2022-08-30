@@ -169,9 +169,11 @@ RegisterNetEvent('esx_boombox:getZones')
 AddEventHandler('esx_boombox:getZones', function(data)
     musicZones = data
 end)
+RegisterNetEvent("esx_ambulancejob:revive")
 AddEventHandler('esx_ambulancejob:revive', function(data)
     isDead = false
 end)
+RegisterNetEvent("esx:onPlayerDeath")
 AddEventHandler('esx:onPlayerDeath', function(data)
     IsDead = true
 end)
