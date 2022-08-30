@@ -1,3 +1,4 @@
 Config = {}
+Config.Locale = 'pl'
 
-Config.Distance = 20 -- What is the distance from which boombox can be heard
+Config.Distance = 10 -- What is the distance from which boombox can be heard

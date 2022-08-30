@@ -1,1 +1,1 @@
-INSERT INTO `items` (`name`, `label`, `weight`) VALUES ('hifi', 'Radio', 1)
+INSERT INTO `items` (`name`, `label`, `weight`) VALUES ('boombox', 'Boombox', 1)
